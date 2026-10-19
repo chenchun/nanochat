@@ -65,9 +65,9 @@ num_heads = model_dim / head_dim
 
 使用标准自回归语言模型交叉熵：
 
-$$
+```math
 L_{base} = -mean(log p(x_t | x_{<t}))
-$$
+```
 
 它不区分 user、assistant 或工具等角色，训练序列中的每个位置都需要预测下一个 token。
 
@@ -240,9 +240,9 @@ device_batch_size = 8
 
 同一道题的多个样本使用去均值 advantage：
 
-$$
+```math
 advantage_i = reward_i - mean(rewards)
-$$
+```
 
 例如奖励为：
 
@@ -257,34 +257,34 @@ advantages = [0.5, -0.5, -0.5, 0.5]
 
 模型首先调用交叉熵并设置 `loss_reduction='none'`，得到每个位置的负对数概率：
 
-$$
+```math
 \operatorname{NLL}_{i,t}
 = -\log \pi_\theta\!\left(y_{i,t}\mid x_i,y_{i,<t}\right)
-$$
+```
 
 脚本再将其取负，得到对应目标 token 的 log probability：
 
-$$
+```math
 \log p_{i,t}=-\operatorname{NLL}_{i,t}
-$$
+```
 
 设 $m_{i,t}\in\{0,1\}$ 为有效 token mask。只有模型自由生成的 token 对应 $m_{i,t}=1$；`targets=-1` 的 prompt、padding 和工具强制输出位置，由交叉熵的 `ignore_index=-1` 处理，其 NLL 和 log probability 都为 0。
 
 对于一次 forward pass，代码计算的策略梯度目标为：
 
-$$
+```math
 J_p(\theta)
 =\frac{1}{N_pPE}
 \sum_{i\in p} A_i
 \sum_t m_{i,t}
 \log \pi_\theta\!\left(y_{i,t}\mid x_i,y_{i,<t}\right)
-$$
+```
 
 最终最小化的 loss 是其相反数：
 
-$$
+```math
 L_p(\theta)=-J_p(\theta)
-$$
+```
 
 其中：
 
