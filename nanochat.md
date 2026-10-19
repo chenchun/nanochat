@@ -168,9 +168,9 @@ padding              mask=0
 
 SFT 仍使用交叉熵，但只模仿 assistant 应生成的 token：
 
-$$
+```math
 L_{SFT} = -mean(log p(y_t | conversation, y_{<t})), t 属于 assistant 输出
-$$
+```
 
 因此，Base 训练学习“所有文本如何继续”，SFT 学习“面对用户输入时 assistant 应该如何回答”。
 
